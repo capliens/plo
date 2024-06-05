@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.kh.team4.dao.MemberDAO">
+	<insert id="insertMember">
+		insert into member(me_id,me_pw,me_email,me_phone,me_nick,me_date,me_ms_num,me_gr_num)
+		value(#{member.me_id},#{member.me_pw},#{member.me_email},#{member.me_phone},#{member.me_nick},now(),'2','2');
+	</insert>
+	
+	<select id="selectMember" resultType="MemberVO">
+		select * from member join grade on gr_num = me_gr_num  where me_id = #{me_id}
+	</select>
+	
+	<select id="selectNickName" resultType="MemberVO">
+		select * from member where me_nick = #{me_nick}
+	</select>
+	
+	<select id="selectMemberId" resultType="MemberVO">
+		select * from member where (me_email = #{email} and me_phone = #{phone}) and me_id not like concat("%","!","%")
+	</select>
+	
+	<update id="updatePassword">
+		update member set me_pw = #{pw} where me_id = #{id}
+	</update>
+	
+	<update id="updateMember">
+		update member set
+			me_pw = #{member.me_pw},
+			me_email = #{member.me_email},
+			me_phone = #{member.me_phone},
+			me_nick = #{member.me_nick}
+		where me_id = #{member.me_id}
+	</update>
+	
+	<select id="selectGradeList" resultType="GradeVO">
+		select * from grade where gr_num = gr_num
+	</select>
+	
+	<insert id="insertGrade">
+		insert into grade(gr_name,gr_discount,gr_loan_condition,gr_post_condition)
+		value(#{grade.gr_name},#{grade.gr_discount},#{grade.gr_loan_condition},#{grade.gr_post_condition})
+	</insert>
+	
+	<select id="selectGrade" resultType="GradeVO">
+		select * from grade where gr_num = #{gr_num}
+	</select>
+	
+	<update id="updateGrade">
+		update grade set
+			gr_name = #{grade.gr_name},
+			gr_discount = #{grade.gr_discount},
+			gr_loan_condition = #{grade.gr_loan_condition},
+			gr_post_condition = #{grade.gr_post_condition}
+		where gr_num = #{grade.gr_num}
+	</update>
+	
+	<update id="updateFailCount">
+		update member set
+			me_fail_count = #{failCount}
+		where me_id = #{me_id}
+	</update>
+	
+	<update id="updateMemberState">
+		update member set
+			me_ms_num = #{num}
+		where me_id = #{me_id}
+	</update>
+	
+	<delete id="deleteGrade">
+		delete from grade where gr_num = #{gr_num}
+	</delete>
+	
+	<update id="updateLoanCount">
+		update member set me_loan_count = me_loan_count + 1 where me_id = #{member.me_id}
+	</update>
+	
+	<select id="selectMemberByNick" resultType="MemberVO">
+		select * from member where me_nick = #{me_nick}
+	</select>
+	
+	<select id="selectMyLoanBook" resultType="BookVO">
+		select *,datediff(loan.lo_limit, now()) as lo_day from book 
+		join 
+			loan on lo_bo_num = bo_num
+		where
+			lo_me_id = #{user.me_id} and lo_state = 1
+			<if test='cri.type=="all"'>
+				and (bo_title like concat('%', #{cri.search}, '%') or
+				bo_publisher like concat('%', #{cri.search}, '%'))
+			</if>
+			<if test='cri.type=="title"'>
+				and bo_title like concat('%', #{cri.search}, '%') 
+			</if>
+			<if test='cri.type=="publisher"'>
+				and bo_publisher like concat('%', #{cri.search}, '%') 
+			</if>
+			group by
+				bo_num
+			order by
+				lo_limit asc
+			LIMIT #{cri.pageStart}, #{cri.perPageNum}
+	</select>
+	
+	<select id="selectTotalCountMyLoanBook" resultType="int">
+		select count(*) from book 
+		join 
+			loan on lo_bo_num = bo_num
+		where
+			lo_me_id = #{user.me_id} and lo_state = 1
+			<if test='cri.type=="all"'>
+				and (bo_title like concat('%', #{cri.search}, '%') or
+				bo_publisher like concat('%', #{cri.search}, '%'))
+			</if>
+			<if test='cri.type=="title"'>
+				and bo_title like concat('%', #{cri.search}, '%') 
+			</if>
+			<if test='cri.type=="publisher"'>
+				and bo_publisher like concat('%', #{cri.search}, '%') 
+			</if>
+	</select>
+	
+	<select id="selectMemberByLoan" resultType="MemberVO">
+		select me_id, me_phone from member
+		join 
+			loan on lo_me_id = me_id 
+		join
+			book on lo_bo_num = bo_num
+		where
+			lo_bo_num = #{book} and lo_state = 1
+	</select>
+	
+	<update id="insertBlock">
+		update member set me_block = date_add(now() , interval #{day} day)  where me_id = #{me_id}
+	</update>
+	
+	<update id="updateBlock">
+		update member set me_block = date_add(me_block , interval #{day} day)  where me_id = #{me_id}
+	</update>
+	
+	<update id="updateUserGrade">
+		update member set me_gr_num = #{gr_num} where me_id = #{me_id}
+	</update>
+		
+	<update id="resetBlockToNull">
+		update member set me_block = null  where me_id = #{me_id}
+	</update>
+	
+	<select id="selectMemberList" resultType="MemberVO">
+		select 
+			member.*,
+			(select ms_name from member_state 
+				where member.me_ms_num = member_state.ms_num) as me_ms_name,
+			(select gr_name from grade
+				where member.me_gr_num = grade.gr_num) as me_gr_name,
+			(select mr_name from member_right 
+				where member.me_mr_num = member_right.mr_num) as me_mr_name
+		from 
+			member 
+		where
+			<if test='cri.type == "all"'>
+				me_mr_num = 2 and (me_ms_num != 1 and (now() &gt; me_block or me_block is null))
+			</if> 
+			<if test='cri.type == "prisoner"'>
+				me_mr_num = 2 and (me_ms_num = 1 or (now() &lt; me_block  and me_block is not null))
+			</if> 
+			<if test='cri.type == "admin"'>
+				me_mr_num != 2
+			</if>
+		order by
+			<if test='cri.order == "right"'>
+				me_mr_num
+			</if>
+			<if test='cri.order == "date"'>
+				me_date
+			</if>
+			<if test='cri.order == "grade"'>
+				me_gr_num
+			</if>
+			<if test='cri.order == "nick"'>
+				me_nick
+			</if>
+			<if test='cri.order == "id"'>
+				me_id
+			</if>
+			<if test='cri.order == "post"'>
+				me_post_count
+			</if>
+			<if test='cri.order == "loan"'>
+				me_loan_count
+			</if>
+			<if test='cri.order == "communityBlock"'>
+				me_block
+			</if>
+			<if test='cri.order == "loanBlock"'>
+				me_loan_block
+			</if>
+			<if test='cri.role == "asc"'>asc</if>
+			<if test='cri.role == "desc"'>desc</if>
+			
+		limit
+			#{cri.pageStart}, #{cri.perPageNum}
+	</select>
+	
+	<select id="totalCountMember" resultType="int">
+		select
+			count(*) 
+		from 
+			member
+		where
+			<if test='cri.type == "all"'>
+				me_mr_num = 2 and (me_ms_num != 1 and (now() &gt; me_block or me_block is null))
+			</if> 
+			<if test='cri.type == "prisoner"'>
+				me_mr_num = 2 and (me_ms_num = 1 or (now() &lt; me_block  and me_block is not null))
+			</if> 
+			<if test='cri.type == "admin"'>
+				me_mr_num != 2
+			</if>
+	</select>
+	
+	<update id="permanentBlock">
+		update member set me_ms_num = 1 where me_id = #{me_id}
+	</update>
+	
+	<update id="decreaseBlock">
+		update member set me_block = date_sub(me_block , interval #{day} day) where me_id = #{me_id}
+	</update>
+
+	<update id="updateLoanBlock">
+		update member set me_loan_block = null where me_id = #{me_id}
+	</update>
+	
+	<update id="updatePostCount">
+		update member set me_post_count = me_post_count + 1 where me_id = #{user.me_id}
+	</update>
+	
+	<select id="selectEmail" resultType="MemberVO">
+		select * from member where me_email = #{email}
+	</select>
+	
+	<update id="updateMemberCount">
+		update member set me_count = #{count} where me_id = #{user.me_id}
+	</update>
+	
+	<update id="updateMemberLoanBlock">
+		update member set me_loan_block = date_add(now() , interval 7 day)  where me_id = #{user.me_id}
+	</update>
+
+	<update id="updateBlockRenewal">
+		update member set me_block = null where now() &gt; me_block
+	</update>
+	
+	<update id="updateMemberRight">
+		update member set me_mr_num = #{num} where me_id = #{me_id}
+	</update>
+	
+	<update id="updateMemberCookie">
+  	update member
+  	set
+  		me_cookie = #{user.me_cookie},
+  		me_cookie_limit = #{user.me_cookie_limit}
+  	where me_id = #{user.me_id}
+  	</update>
+  
+	<select id="selectMemberByCookie" resultType="MemberVO">
+		<![CDATA[
+		select * from member 
+		where me_cookie = #{me_cookie} and me_cookie_limit >= now()
+		]]>
+	</select>
+	
+	<select id="selectMyReportList" resultType="ReportVO">
+		select *,
+			(select 
+				member.me_nick 
+			from 
+				member
+			where 
+				member.me_id = report.rp_writer)as rp_writer_nick 
+		from 
+			report 
+		where
+			rp_me_id = #{user.me_id}
+			<if test='cri.type=="all"'>
+				and rp_note like concat('%', #{cri.search}, '%')
+			</if>
+			group by
+				rp_num
+			order by
+				rp_num asc
+			LIMIT #{cri.pageStart}, #{cri.perPageNum}
+	</select>
+	
+	<select id="selectTotalCountMyReport" resultType="int">
+		select count(*) from report 
+		where
+			rp_me_id = #{user.me_id}
+			<if test='cri.type=="all"'>
+				and rp_note like concat('%', #{cri.search}, '%')
+			</if>
+	</select>
+	
+	<insert id="insertSnsMember">
+		insert into member(me_id, me_email, me_phone, me_nick, me_date, me_ms_num, me_gr_num)
+		values(#{member.me_id}, #{member.me_email}, #{member.me_phone}, #{member.me_nick}, now(), '2', '2')
+	</insert>
+	
+	<select id="selectUserGradeList" resultType="GradeVO">
+		select * from grade join member on me_gr_num = gr_num where me_id = #{me_id}
+	</select>
+	
+	<select id="totalCountMemberNum" resultType="int">
+		select count(*) from member where me_ms_num > 1
+	</select>
+	
+	<update id="updateResetLoanBlock">
+		update member set me_loan_block = null where me_id = #{user.me_id}
+	</update>
+	
+	<select id="selectMyReserveBookList" resultType="BookVO">
+		select * from book 
+		join 
+			loan on lo_bo_num = bo_num
+		join 
+			reserve on re_bo_num = bo_num
+		where
+			re_me_id = #{user.me_id} and re_state = 1
+			<if test='cri.type=="all"'>
+				and (bo_title like concat('%', #{cri.search}, '%') or
+				bo_publisher like concat('%', #{cri.search}, '%'))
+			</if>
+			<if test='cri.type=="title"'>
+				and bo_title like concat('%', #{cri.search}, '%') 
+			</if>
+			<if test='cri.type=="publisher"'>
+				and bo_publisher like concat('%', #{cri.search}, '%') 
+			</if>
+			group by
+				bo_num
+			order by
+				re_date asc
+			LIMIT #{cri.pageStart}, #{cri.perPageNum}
+	</select>
+	
+	<select id="selectTotalCountMyReserveBook" resultType="int">
+		select count(*) from book 
+		join 
+			loan on lo_bo_num = bo_num
+		join 
+			reserve on re_bo_num = bo_num
+		where
+			re_me_id = #{user.me_id} and re_state = 1
+			<if test='cri.type=="all"'>
+				and (bo_title like concat('%', #{cri.search}, '%') or
+				bo_publisher like concat('%', #{cri.search}, '%'))
+			</if>
+			<if test='cri.type=="title"'>
+				and bo_title like concat('%', #{cri.search}, '%') 
+			</if>
+			<if test='cri.type=="publisher"'>
+				and bo_publisher like concat('%', #{cri.search}, '%') 
+			</if>
+	</select>
+</mapper>

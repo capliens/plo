@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+ 
+<tiles-definitions>
+	<!-- 메인 이미지 제외 레이아웃 -->
+	<definition name="/member/login" template="/WEB-INF/views/layout/noImgLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/views/common/header.jsp" />   
+        <put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/member/login.jsp" />
+    </definition>
+	
+	<definition name="/member/signup" template="/WEB-INF/views/layout/noImgLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/views/common/header.jsp" />   
+        <put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/member/signup.jsp" />
+    </definition>
+	
+	<definition name="/member/findid" template="/WEB-INF/views/layout/noImgLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/views/common/header.jsp" />   
+        <put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/member/findid.jsp" />
+    </definition>
+	
+	<definition name="/member/findpw" template="/WEB-INF/views/layout/noImgLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/views/common/header.jsp" />   
+        <put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/member/findpw.jsp" />
+    </definition>
+	
+	<definition name="/member/mypage" template="/WEB-INF/views/layout/noImgLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/views/common/header.jsp" />   
+        <put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/member/mypage.jsp" />
+    </definition>
+    
+	
+	<!-- 팝업 레이아웃 -->
+	<definition name="/popup/*/*" template="/WEB-INF/views/layout/popupLayout.jsp">
+        <put-attribute name="body" value="/WEB-INF/views/popup/{1}/{2}.jsp" />
+    </definition>
+    <!-- 커뮤니티 레이아웃 -->
+    <definition name="/community/*/*" template="/WEB-INF/views/layout/communityLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/views/common/header.jsp" />
+        <put-attribute name="sidebar" value="/WEB-INF/views/common/communitySidebar.jsp" />   
+        <put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/community/{1}/{2}.jsp" />
+    </definition>
+    <!-- 판매 레이아웃 -->
+     <definition name="/library/sale/*" template="/WEB-INF/views/layout/baseLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/views/common/bookSaleHeader.jsp" />   
+        <put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/library/sale/{1}.jsp" />
+    </definition>
+    <!-- 도서 레이아웃 -->
+    <definition name="/library/*/*" template="/WEB-INF/views/layout/baseLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/views/common/header.jsp" />   
+        <put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/library/{1}/{2}.jsp" />
+    </definition>
+    <!--메인 레이아웃-->
+    <definition name="/*/*" template="/WEB-INF/views/layout/baseLayout.jsp">
+        <put-attribute name="header" value="/WEB-INF/views/common/header.jsp" />   
+        <put-attribute name="footer" value="/WEB-INF/views/common/footer.jsp" />
+        <put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" />
+    </definition>
+    
+</tiles-definitions>
