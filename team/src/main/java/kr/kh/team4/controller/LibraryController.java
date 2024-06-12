@@ -37,9 +37,8 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 @Controller
 public class LibraryController {
-	private static String kakaoAPI="카카오 api";
+	
 	private static String aladinAPI="알라딘api";
-	private static String imp="포트윈 키";
 	
 	@Autowired
 	BookService bookService;
@@ -50,15 +49,14 @@ public class LibraryController {
 	@Autowired
 	PostService postService;
 	
-	@GetMapping("/library/management/manager")
+	@GetMapping("/management/bookManager")
 	public String libraryManagement(Model model) {	
 		ArrayList<UpperVO> upperList=bookService.getUpperList();
-		model.addAttribute("api",kakaoAPI);
 		model.addAttribute("upList", upperList);
 		return "/library/management/manager";
 	}
 	
-	@GetMapping("/library/book/list")
+	@GetMapping("/library/book")
 	public String libraryList(Model model,BookCriteria boCri,BookVO book) {	
 		boCri.setPerPageNum(10);
 		boCri.setBo_code(2);
@@ -90,33 +88,30 @@ public class LibraryController {
 		return "/library/book/detail";
 	}
 	
-	@GetMapping("/library/management/bookCategory")
+	@GetMapping("/management/bookCategory")
 	public String managementBookCatgory(Model model) {
 		ArrayList<UpperVO> upList=bookService.getUpperList();
 		model.addAttribute("upList",upList);
-		return "/library/management/bookCategory";
+		return "/library/management/category";
 	}
 	
-
-	@GetMapping("/library/bookSale/list")
+	@GetMapping("/bookSale/list")
 	public String bookSale(Model model,HttpSession session) {
 		MemberVO user=(MemberVO) session.getAttribute("user");
 		model.addAttribute("user",user);
-		model.addAttribute("api",aladinAPI);
-		return "/library/sale/bookSaleList";
+		return "/library/sale/bookList";
 	}
 
-	@GetMapping("/library/book/sale")
+	@GetMapping("/bookSale")
 	public String Sale(Model model,HttpSession session) {
 		MemberVO user=(MemberVO)session.getAttribute("user");
 		GradeVO grade=memberService.getGrade(user.getMe_gr_num());
-		model.addAttribute("imp",imp);
 		model.addAttribute("user",user);
 		model.addAttribute("grade",grade);
-		return "/library/sale/bookSale";
+		return "/library/sale/sale";
 	}
 	
-	@GetMapping("/library/bookSale/search")
+	@GetMapping("/bookSale/search")
 	public String bookSaleSearch(Model model,Criteria cri,HttpSession session){
 		try {
 			StringBuilder urlBuilder = new StringBuilder("http://www.aladin.co.kr/ttb/api/ItemSearch.aspx"); /* URL */
@@ -156,10 +151,10 @@ public class LibraryController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "/library/sale/bookSaleSearch";
+		return "/library/sale/bookSearch";
 	}
 	
-	@GetMapping("/library/management/loan")
+	@GetMapping("/management/loan")
 	public String loan(Model model, HttpSession session, MyBookCriteria cri) {
 		MemberVO user = (MemberVO)session.getAttribute("user");
 		ArrayList<BookVO> list = bookService.getLoanBookList(cri, user);
@@ -168,10 +163,10 @@ public class LibraryController {
 		PageMaker pm = new PageMaker(5, cri, totalCount);
 		model.addAttribute("loanList", list);
 		model.addAttribute("pm", pm);
-		return "/library/management/loan";
+		return "/library/management/loan"; 
 	}
 	
-	@GetMapping("/library/bookSale/detail")
+	@GetMapping("/bookSale/detail")
 	public String bookSaleDetail(Model model,String isbn,HttpSession session){
 		try {
 			StringBuilder urlBuilder = new StringBuilder("http://www.aladin.co.kr/ttb/api/ItemLookUp.aspx"); /* URL */
@@ -207,17 +202,17 @@ public class LibraryController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "/library/sale/bookSaleDetail";
+		return "/library/sale/bookDetail";
 	}
 	
-	@GetMapping("/library/order/list")
+	@GetMapping("/bookSale/order")
 	public String SaleList() {
 		
 		return "/library/sale/order";
 	}
 
 	
-	@GetMapping("/library/management/order")
+	@GetMapping("/management/order")
 	public String managementOrder() {
 		
 		return "/library/management/order";

@@ -68,15 +68,15 @@
 		</interceptor>
 		<!-- 장바구니 -->
 		<interceptor>
-			<mapping path="/library/book/sale"/>
+			<mapping path="/bookSale"/>
 			<beans:ref bean="BaskatLoginInterceptor"/>
 		</interceptor>
 		<!-- 관리자페이지 -->
 		<interceptor>
-			<mapping path="/library/management/manager"/>
-			<mapping path="/library/management/bookCategory"/>
-			<mapping path="/library/management/order"/>
-			<mapping path="/library/management/loan"/>
+			<mapping path="/management/bookManager"/>
+			<mapping path="/management/bookCategory"/>
+			<mapping path="/management/order"/>
+			<mapping path="/management/loan"/>
 			<mapping path="/grade/list"/>
 			<beans:ref bean="ManagerInterceptor"/>
 		</interceptor>

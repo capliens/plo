@@ -58,7 +58,7 @@ a:hover{text-decoration: none; color: #000;}
 		<li class="nav-option">
 			<div>
 				<ul>
-					<li><a href="<c:url value="/library/book/list"/>">도서 목록</a></li>
+					<li><a href="<c:url value="/library/book"/>">도서 목록</a></li>
 				</ul>
 			</div>
 		</li>
@@ -77,7 +77,7 @@ a:hover{text-decoration: none; color: #000;}
 	</ul>
 	<ul class="nav-list">
 		<li class="nav-item"><a
-			href="<c:url value="/library/bookSale/list"/>">도서 판매</a></li>
+			href="<c:url value="/bookSale/list"/>">도서 판매</a></li>
 		<li class="nav-option">
 			<div>
 				<ul>
@@ -92,14 +92,14 @@ a:hover{text-decoration: none; color: #000;}
 			<li class="nav-option">
 				<div>
 					<ul>
-						<li><a href="<c:url value="/library/management/manager"/>">도서
+						<li><a href="<c:url value="/management/bookManager"/>">도서
 								관리</a></li>
 						<li><a
-							href="<c:url value="/library/management/bookCategory"/>">도서
+							href="<c:url value="/management/bookCategory"/>">도서
 								카테고리 관리</a></li>
-						<li><a href="<c:url value="/library/management/order"/>">주문
+						<li><a href="<c:url value="/management/order"/>">주문
 								관리</a></li>
-						<li><a href="<c:url value="/library/management/loan"/>">대출
+						<li><a href="<c:url value="/management/loan"/>">대출
 								관리</a></li>
 					</ul>
 				</div>

@@ -431,6 +431,7 @@ table {
 	});
 	
 	function searchBook(bookSearch) {
+		const key ='KakaoAK '+api.kakaoAPI;
 		$.ajax({
 			async : true,
 			url : "https://dapi.kakao.com/v3/search/book", 
@@ -440,7 +441,7 @@ table {
 				page:bookSearch.page,
 				target:bookSearch.target
 				}, 
-			headers: { "Authorization":"KakaoAK ${api}" },
+			headers: { "Authorization":key },
 			dataType :"json", 
 			success : function (data){
 				let str="";

@@ -148,7 +148,7 @@
 	<div class="container">
 		<div id="nav"></div>
 		<form class="search input-group  mt-5" method="get"
-			action="<c:url value="/library/bookSale/search"/>">
+			action="<c:url value="/bookSale/search"/>">
 			<select class="form-control" name="type" id="type">
 				<option value="Keyword">제목+저자</option>
 				<option value="Title">도서명</option>
@@ -276,13 +276,14 @@
 	<!-- 도서 리스트 출력 -->
 	<script type="text/javascript">
 	let APIdata={
-		TTBKey:"${api}",
+		TTBKey:api.aladinAPI,
 		QueryType:"ItemNewAll",
 		SearchTarget:"Book",
 		Start:1,
 		Output:"JS",
 		Version:20131101
 	};
+	console.log(APIdata);
 	let bookListCri={
 		startPage:1,
 		perPage:10	

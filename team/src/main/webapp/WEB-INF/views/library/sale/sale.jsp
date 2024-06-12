@@ -108,13 +108,13 @@
 	<!-- 결제 -->
 	<script type="text/javascript">
 		var IMP = window.IMP;
-		IMP.init("${imp}");   /* imp~ : 가맹점 식별코드*/
+		IMP.init(api.imp);   /* imp~ : 가맹점 식별코드*/
 		let Goods={
 			total:0,
 			name:"",
 			uid:""
 		};
-		
+		console.log(Goods);
 		$('#money-btn').click(function() {
 			Goods.name=selectedBook.length>1?
 					data[selectedBook[0]].title+" 외 "+(selectedBook.length-1)+"개":data[selectedBook[0]].title;

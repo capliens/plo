@@ -41,6 +41,7 @@ integrity="sha256-y2bkXLA0VKwUx5hwbBKnaboRThcu7YOFyuYarJbCnoQ=" crossorigin="ano
 <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 
 <link href="${path}/resources/css/bookCss/test.css" rel="stylesheet"/> 
+<script src="${path}/resources/api/apiKey.js"></script>
 <style type="text/css">
 	.main-img-container{
 		width: 100%;

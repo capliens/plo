@@ -73,7 +73,7 @@
 	<div class="collapse navbar-collapse justify-content-end me-3">
 		<ul class="navbar-nav">
 			<li class="nav-item basket"><a class="nav-link"
-				href="<c:url value="/library/book/sale"/>">장바구니</a></li>
+				href="<c:url value="/bookSale"/>">장바구니</a></li>
 			<c:if test="${user == null}">
 				<li class="nav-item"><a class="nav-link"
 					href="<c:url value="/signup"/>">회원가입</a></li>
@@ -178,7 +178,7 @@
 			if(basket[i].isbn13==isbn){
 				let basketJson=JSON.stringify(basket);
 				localStorage.setItem(nick,basketJson);
-				location.href = '<c:url value="/library/book/sale" />';
+				location.href = '<c:url value="/bookSale" />';
 				return;
 			}
 		}
@@ -189,13 +189,13 @@
 		}
 		let basketJson=JSON.stringify(basket);
 		localStorage.setItem(nick,basketJson);
-		location.href = '<c:url value="/library/book/sale" />';	
+		location.href = '<c:url value="/bookSale" />';	
 	});
 	
 	function displayBasketView() {
 		let i=0;
 		let str=`
-			<a class="nav-link" href="<c:url value="/library/book/sale"/>">장바구니(\${basket.length})</a>
+			<a class="nav-link" href="<c:url value="/bookSale"/>">장바구니(\${basket.length})</a>
 			<div class="basket-box"><ul>
 			`;
 			if(basket.length==0){
